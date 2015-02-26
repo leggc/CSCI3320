@@ -65,16 +65,10 @@
     
     return result;
 }
+
 - (void)clear
 {
     _operandStack = nil;
-}
-
-- (double)performBackspace:(NSString *)operation
-{
-    [self popOperand];
-    double result = 0;
-    return result;
 }
 
 @end
