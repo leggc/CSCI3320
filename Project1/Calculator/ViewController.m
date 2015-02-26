@@ -30,20 +30,23 @@
 {
     NSString *digit = [sender currentTitle];
     NSRange range = [self.display.text rangeOfString:@"."];
+    
     if (self.userIsInTheMiddleOfEnteringANumber) {
+        //allows entry after one period
         if ((![digit isEqual: @"."]) && (range.location != NSNotFound)) {
             self.display.text = [self.display.text stringByAppendingString:digit];
         }
+        //allows one period
         else if ([digit isEqual: @"."] && (range.location == NSNotFound)) {
             self.display.text = [self.display.text stringByAppendingString:digit];
         }
-        else if ((![digit isEqual: @"."]) && (range.location == NSNotFound)) {
+        //append digits
+        else if (![digit isEqual: @"."] && (range.location == NSNotFound)) {
             self.display.text = [self.display.text stringByAppendingString:digit];
         }
-       
     }
     else {
-        if([digit isEqual:@"0"]) {
+        if ([digit isEqual:@"0"]) {
             self.display.text = @"0";
             self.userIsInTheMiddleOfEnteringANumber = NO;
         }
@@ -54,22 +57,23 @@
     }
 }
 
-
 - (IBAction)enterPressed
 {
-    if(self.userIsInTheMiddleOfEnteringANumber) {
-        NSInteger length2 = self.display2.text.length;
-        if (length2 > 20) {
+    NSInteger length = self.display2.text.length;
+    
+    if (self.userIsInTheMiddleOfEnteringANumber) {
+        //clears display2 after 20 characters
+        if (length > 20) {
             self.display2.text = @"";
         }
+        //display appended to display2
         self.display2.text = [self.display2.text stringByAppendingString:self.display.text];
         [self.brain pushOperand:[self.display.text doubleValue]];
-
     
         self.display2.text = [self.display2.text stringByAppendingString:@" "];
         self.display.text = @"0";
     }
-        self.userIsInTheMiddleOfEnteringANumber = NO;
+    self.userIsInTheMiddleOfEnteringANumber = NO;
 }
 
 - (IBAction)operationPressed:(id)sender
@@ -83,10 +87,11 @@
     }
 
     double result = [self.brain performOperation:operation];
+    
     self.display2.text = [self.display2.text stringByAppendingString:@" = "];
     self.display.text = [NSString stringWithFormat:@"%g", result];
     self.display2.text = [self.display2.text stringByAppendingString:self.display.text];
-    self.display2.text = [self.display2.text stringByAppendingString:@"; "];
+    self.display2.text = [self.display2.text stringByAppendingString:@" | "];
 }
 
 - (IBAction)clearPressed {
@@ -98,12 +103,12 @@
 
 - (IBAction)backspacePressed
 {
-    if(!userIsInTheMiddleOfEnteringANumber)
+    if (!userIsInTheMiddleOfEnteringANumber)
        return;
     
     NSInteger length = self.display.text.length;
 
-    if(length > 1) {
+    if (length > 1) {
         self.display.text = [self.display.text substringToIndex: length-1 ];
     }
     else {
@@ -117,12 +122,12 @@
     NSRange range = [self.display.text rangeOfString:@"-"];
     NSString *list = self.display.text;
     
-    if(range.location == NSNotFound) {
+    if (range.location == NSNotFound) {
         self.display.text= @"";
         self.display.text = [self.display.text stringByAppendingString:@"-"];
         self.display.text = [self.display.text stringByAppendingString:list];
     }
-    else{
+    else {
         self.display.text = [self.display.text substringFromIndex:1];
     }
 }
